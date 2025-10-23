@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: wp_db
-      PMA_USER: ${DB_USER:-wordpress}
+      PMA_USER: root
       PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
       PMA_ARBITRARY: 1
       PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
