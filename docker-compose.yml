@@ -14,6 +14,8 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_LOG', true);
     command: >
       bash -c "
       echo 'ServerName ${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
@@ -61,6 +63,9 @@ services:
       PMA_HOST: wp_db
       PMA_USER: ${DB_USER:-wordpress}
       PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
+      PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
+      UPLOAD_LIMIT: 64M
+      MEMORY_LIMIT: 256M
     depends_on:
       wp_db:
         condition: service_healthy
