@@ -59,21 +59,14 @@ services:
     # Database should not be exposed via Traefik
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     restart: unless-stopped
     environment:
       PMA_HOST: wp_db
       PMA_USER: ${DB_USER:-wordpress}
       PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
-      PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
-      UPLOAD_LIMIT: 64M
-      MEMORY_LIMIT: 256M
       PMA_ARBITRARY: 1
-      PMA_VERBOSE: 1
-      PMA_PMADB: phpmyadmin
-      PMA_CONTROLUSER: pma
-      PMA_CONTROLPASS: pmapass
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
+      PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
     depends_on:
       wp_db:
         condition: service_healthy
@@ -85,11 +78,6 @@ services:
       - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.${DOMAIN_NAME:-localhost}`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=web"
       - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-    command: >
-      bash -c "
-      echo 'ServerName phpmyadmin.${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
-      exec apache2-foreground
-      "
 
 volumes:
   wp_data:
