@@ -88,9 +88,9 @@ define('WP_MEMORY_LIMIT', '256M');
 // Disable file editing
 define('DISALLOW_FILE_EDIT', true);
 
-// Set WordPress URL and Site URL (adjust these to your domain)
-define('WP_HOME', 'https://sklztect.com');
-define('WP_SITEURL', 'https://sklztect.com');
+// Set WordPress URL and Site URL (configurable via environment variables)
+define('WP_HOME', getenv('WORDPRESS_HOME') ?: 'http://localhost:8080');
+define('WP_SITEURL', getenv('WORDPRESS_SITEURL') ?: 'http://localhost:8080');
 
 /* That's all, stop editing! Happy publishing. */
 

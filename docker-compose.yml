@@ -12,13 +12,15 @@ services:
       WORDPRESS_DB_USER: ${DB_USER:-wordpress}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
-      WORDPRESS_TABLE_PREFIX: 1757397954_wp_
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
+      WORDPRESS_HOME: ${WORDPRESS_HOME:-http://localhost:8080}
+      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-http://localhost:8080}
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
     command: >
       bash -c "
-      echo 'ServerName sklztect.com' >> /etc/apache2/apache2.conf &&
+      echo 'ServerName ${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
       docker-entrypoint.sh apache2-foreground
       "
     volumes:
@@ -31,7 +33,7 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wordpress.rule=Host(`sklztect.com`)"
+      - "traefik.http.routers.wordpress.rule=Host(`${DOMAIN_NAME:-localhost}`)"
       - "traefik.http.routers.wordpress.entrypoints=web"
       - "traefik.http.services.wordpress.loadbalancer.server.port=80"
 
@@ -72,7 +74,7 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.sklztect.com`)"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.${DOMAIN_NAME:-localhost}`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=web"
       - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
 

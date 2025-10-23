@@ -15,6 +15,11 @@
 Create a `.env` file in your project root with the following variables:
 
 ```env
+# Domain Configuration
+DOMAIN_NAME=your-domain.com
+WORDPRESS_HOME=https://your-domain.com
+WORDPRESS_SITEURL=https://your-domain.com
+
 # Database Configuration
 DB_NAME=wordpress
 DB_USER=wordpress
@@ -23,6 +28,17 @@ DB_PASSWORD=your_secure_password_here
 # WordPress Configuration
 WORDPRESS_DEBUG=0
 WORDPRESS_TABLE_PREFIX=1757397954_wp_
+```
+
+### For Backup Sites
+
+When hosting a backup of your site on a different domain:
+
+```env
+# Example for backup site
+DOMAIN_NAME=backup.yourdomain.com
+WORDPRESS_HOME=https://backup.yourdomain.com
+WORDPRESS_SITEURL=https://backup.yourdomain.com
 ```
 
 ## Security Recommendations
@@ -35,9 +51,9 @@ WORDPRESS_TABLE_PREFIX=1757397954_wp_
    - Change the default password in your .env file
    - Use a password manager to generate secure passwords
 
-3. **Update WordPress URLs**:
-   - The wp-config.php is configured for sklztect.com
-   - Update WP_HOME and WP_SITEURL if your domain is different
+3. **Configure Domain URLs**:
+   - Set DOMAIN_NAME, WORDPRESS_HOME, and WORDPRESS_SITEURL in your .env file
+   - These will automatically configure WordPress URLs and Traefik routing
 
 ## Deployment Steps
 
