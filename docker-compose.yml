@@ -17,13 +17,13 @@ services:
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
     volumes:
-      - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
       - .:/var/www/html
     depends_on:
       wp_db:
         condition: service_healthy
     networks:
       - wordpress-network
+      - dokploy-network
 
   wp_db:
     image: mysql:8.4
@@ -43,6 +43,7 @@ services:
       start_period: 30s
     networks:
       - wordpress-network
+      - dokploy-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -58,6 +59,7 @@ services:
         condition: service_healthy
     networks:
       - wordpress-network
+      - dokploy-network
 
 volumes:
   wp_data:
@@ -65,3 +67,5 @@ volumes:
 networks:
   wordpress-network:
     driver: bridge
+  dokploy-network:
+    external: true
