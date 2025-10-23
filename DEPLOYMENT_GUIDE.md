@@ -38,9 +38,15 @@ WORDPRESS_HOME=https://your-custom-domain.com
 WORDPRESS_SITEURL=https://your-custom-domain.com
 ```
 
-### Automatic Database Import
+### Database Import
 
-The setup now automatically imports `combined_database.sql` on first deployment. No manual import needed!
+After deployment, you need to manually import your database:
+
+1. **Access phpMyAdmin**: Go to `https://phpmyadmin.sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me`
+2. **Login**: Use your database credentials
+3. **Select Database**: Choose the `wordpress` database
+4. **Import**: Go to Import tab and upload your `combined_database.sql` file
+5. **Click Go**: Wait for import to complete
 
 ## Security Recommendations
 
@@ -58,20 +64,20 @@ The setup now automatically imports `combined_database.sql` on first deployment.
 
 ## Deployment Steps
 
-1. **Update your .env file** with secure passwords
-2. **Generate WordPress security keys** and update wp-config.php
-3. **Redeploy your application** in Dokploy
-4. **Import your database** using the combined_database.sql file
+1. **Set environment variables** in Dokploy (database credentials only)
+2. **Deploy your application** in Dokploy
+3. **Access phpMyAdmin** to import your database
+4. **Import combined_database.sql** via phpMyAdmin interface
+5. **Access your WordPress site** - it should work now!
 
-## Database Import
+## Troubleshooting
 
-To import your existing database:
+If you encounter issues:
 
-1. Access phpMyAdmin at: https://phpmyadmin.sklztect.com
-2. Select the 'wordpress' database
-3. Go to Import tab
-4. Upload your combined_database.sql file
-5. Click Go to import
+1. **Bad Gateway Error**: Usually means database is not imported yet
+2. **Database Connection Error**: Check your database credentials in environment variables
+3. **Domain Issues**: Verify your Traefik URL is correct
+4. **Import Issues**: Make sure combined_database.sql file is valid and not corrupted
 
 ## Monitoring
 

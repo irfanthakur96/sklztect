@@ -55,39 +55,6 @@ services:
       - wordpress-network
       - dokploy-network
 
-  db_importer:
-    image: mysql:8.4
-    restart: "no"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
-      MYSQL_DATABASE: ${DB_NAME:-wordpress}
-      MYSQL_USER: ${DB_USER:-wordpress}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
-    volumes:
-      - ./combined_database.sql:/tmp/combined_database.sql:ro
-    depends_on:
-      wp_db:
-        condition: service_healthy
-    networks:
-      - wordpress-network
-      - dokploy-network
-    command: >
-      bash -c "
-      echo 'Waiting for database to be ready...' &&
-      sleep 15 &&
-      echo 'Checking if database is empty...' &&
-      TABLE_COUNT=$$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SHOW TABLES;' 2>/dev/null | wc -l) &&
-      if [ $$TABLE_COUNT -eq 0 ]; then
-        echo 'Database is empty, importing combined_database.sql...' &&
-        mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
-        echo 'Database import completed successfully!' &&
-        echo 'Tables imported: $$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e "SHOW TABLES;" 2>/dev/null | wc -l)'
-      else
-        echo 'Database already has data ($$TABLE_COUNT tables), skipping import.'
-      fi &&
-      exit 0
-      "
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
