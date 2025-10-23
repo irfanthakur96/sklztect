@@ -12,14 +12,11 @@
 
 ## Environment Variables Setup
 
-Create a `.env` file in your project root with the following variables:
+### Automatic Domain Detection (Recommended)
+
+The setup now automatically detects the domain from Dokploy. You only need to set:
 
 ```env
-# Domain Configuration
-DOMAIN_NAME=your-domain.com
-WORDPRESS_HOME=https://your-domain.com
-WORDPRESS_SITEURL=https://your-domain.com
-
 # Database Configuration
 DB_NAME=wordpress
 DB_USER=wordpress
@@ -30,16 +27,20 @@ WORDPRESS_DEBUG=0
 WORDPRESS_TABLE_PREFIX=1757397954_wp_
 ```
 
-### For Backup Sites
+### Manual Domain Override (Optional)
 
-When hosting a backup of your site on a different domain:
+If you want to override the automatic detection:
 
 ```env
-# Example for backup site
-DOMAIN_NAME=backup.yourdomain.com
-WORDPRESS_HOME=https://backup.yourdomain.com
-WORDPRESS_SITEURL=https://backup.yourdomain.com
+# Domain Configuration (optional)
+DOMAIN_NAME=your-custom-domain.com
+WORDPRESS_HOME=https://your-custom-domain.com
+WORDPRESS_SITEURL=https://your-custom-domain.com
 ```
+
+### Automatic Database Import
+
+The setup now automatically imports `combined_database.sql` on first deployment. No manual import needed!
 
 ## Security Recommendations
 

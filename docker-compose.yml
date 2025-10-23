@@ -11,8 +11,8 @@ services:
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
-      WORDPRESS_HOME: ${WORDPRESS_HOME:-http://localhost:8080}
-      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-http://localhost:8080}
+      WORDPRESS_HOME: ${WORDPRESS_HOME:-https://${DOMAIN_NAME:-localhost}}
+      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-https://${DOMAIN_NAME:-localhost}}
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
@@ -54,6 +54,32 @@ services:
     networks:
       - wordpress-network
       - dokploy-network
+
+  db_importer:
+    image: mysql:8.4
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
+      MYSQL_DATABASE: ${DB_NAME:-wordpress}
+      MYSQL_USER: ${DB_USER:-wordpress}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
+    volumes:
+      - ./combined_database.sql:/docker-entrypoint-initdb.d/combined_database.sql:ro
+    depends_on:
+      wp_db:
+        condition: service_healthy
+    networks:
+      - wordpress-network
+      - dokploy-network
+    command: >
+      bash -c "
+      echo 'Waiting for database to be ready...' &&
+      sleep 10 &&
+      echo 'Importing database...' &&
+      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /docker-entrypoint-initdb.d/combined_database.sql &&
+      echo 'Database import completed!' &&
+      exit 0
+      "
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
