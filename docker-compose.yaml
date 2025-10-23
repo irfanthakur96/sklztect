@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: wp_db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+      WORDPRESS_TABLE_PREFIX: 1757397954_wp_
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_MEMORY_LIMIT', '256M');
+        define('DISALLOW_FILE_EDIT', true);
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      wp_db:
+        condition: service_healthy
+    networks:
+      - wordpress-network
+      - dokploy-network
+
+  wp_db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
+      MYSQL_DATABASE: ${DB_NAME:-wordpress}
+      MYSQL_USER: ${DB_USER:-wordpress}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
+    volumes:
+      - wp_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - wordpress-network
+      - dokploy-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: wp_db
+      PMA_USER: ${DB_USER:-wordpress}
+      PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
+    depends_on:
+      wp_db:
+        condition: service_healthy
+    networks:
+      - wordpress-network
+      - dokploy-network
+
+volumes:
+  wp_data:
+
+networks:
+  wordpress-network:
+    driver: bridge
+  dokploy-network:
+    external: true
