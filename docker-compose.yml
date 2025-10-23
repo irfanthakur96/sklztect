@@ -9,13 +9,15 @@ services:
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
-      WORDPRESS_HOME: ${WORDPRESS_HOME:-https://${DOMAIN_NAME:-localhost}}
-      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-https://${DOMAIN_NAME:-localhost}}
+      WORDPRESS_HOME: ${WORDPRESS_HOME:-http://localhost}
+      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-http://localhost}
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
         define('WP_DEBUG', true);
         define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        define('WP_ALLOW_REPAIR', true);
     command: >
       bash -c "
       echo 'ServerName ${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
