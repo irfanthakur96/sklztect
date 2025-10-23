@@ -1,0 +1,1 @@
+!function(n){var o=function(n,o){var e=o(".aae--notification .close-icon",n),i=o(".aae--notification",n);e.on("click",(function(){i.hide()}))};n(window).on("elementor/frontend/init",(function(){elementorFrontend.hooks.addAction("frontend/element_ready/aae--notification.default",o)}))}(jQuery);
