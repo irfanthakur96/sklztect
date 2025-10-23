@@ -16,6 +16,11 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
+    command: >
+      bash -c "
+      echo 'ServerName sklztect.com' >> /etc/apache2/apache2.conf &&
+      docker-entrypoint.sh apache2-foreground
+      "
     volumes:
       - .:/var/www/html
     depends_on:
