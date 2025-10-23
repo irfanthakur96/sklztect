@@ -17,6 +17,7 @@ services:
         define('DISALLOW_FILE_EDIT', true);
     volumes:
       - ../files/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - .:/var/www/html
     depends_on:
       wp_db:
         condition: service_healthy
