@@ -14,10 +14,10 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
-    entrypoint: >
+    command: >
       bash -c "
       echo 'ServerName ${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
-      /usr/local/bin/docker-entrypoint.sh apache2-foreground
+      exec apache2-foreground
       "
     volumes:
       - .:/var/www/html
@@ -72,10 +72,10 @@ services:
       - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.${DOMAIN_NAME:-localhost}`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=web"
       - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-    entrypoint: >
+    command: >
       bash -c "
       echo 'ServerName phpmyadmin.${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
-      /usr/local/bin/docker-entrypoint.sh apache2-foreground
+      exec apache2-foreground
       "
 
 volumes:
