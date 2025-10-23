@@ -2,27 +2,18 @@ services:
   wordpress:
     image: wordpress:latest
     restart: unless-stopped
+    ports:
+      - "8080:80"
     environment:
       WORDPRESS_DB_HOST: wp_db:3306
       WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
       WORDPRESS_DB_USER: ${DB_USER:-wordpress}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
-      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX:-wp_}
-      WORDPRESS_HOME: ${WORDPRESS_HOME:-http://localhost}
-      WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-http://localhost}
+      WORDPRESS_TABLE_PREFIX: 1757397954_wp_
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
-        define('WP_DEBUG', true);
-        define('WP_DEBUG_LOG', true);
-        define('WP_DEBUG_DISPLAY', false);
-        define('WP_ALLOW_REPAIR', true);
-    command: >
-      bash -c "
-      echo 'ServerName ${DOMAIN_NAME:-localhost}' >> /etc/apache2/apache2.conf &&
-      exec apache2-foreground
-      "
     volumes:
       - .:/var/www/html
     depends_on:
@@ -48,7 +39,7 @@ services:
     volumes:
       - wp_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -56,17 +47,16 @@ services:
     networks:
       - wordpress-network
       - dokploy-network
-    # Database should not be exposed via Traefik
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin
     restart: unless-stopped
+    ports:
+      - "8081:80"
     environment:
       PMA_HOST: wp_db
-      PMA_USER: root
+      PMA_USER: ${DB_USER:-wordpress}
       PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
-      PMA_ARBITRARY: 1
-      PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
     depends_on:
       wp_db:
         condition: service_healthy
