@@ -68,6 +68,12 @@ services:
       PMA_ABSOLUTE_URI: https://phpmyadmin.${DOMAIN_NAME:-localhost}
       UPLOAD_LIMIT: 64M
       MEMORY_LIMIT: 256M
+      PMA_ARBITRARY: 1
+      PMA_VERBOSE: 1
+      PMA_PMADB: phpmyadmin
+      PMA_CONTROLUSER: pma
+      PMA_CONTROLPASS: pmapass
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
     depends_on:
       wp_db:
         condition: service_healthy
