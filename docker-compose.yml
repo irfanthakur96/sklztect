@@ -17,7 +17,8 @@ services:
         define('WP_MEMORY_LIMIT', '256M');
         define('DISALLOW_FILE_EDIT', true);
     volumes:
-      - .:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+      - ./wp-config.php:/var/www/html/wp-config.php
     depends_on:
       wp_db:
         condition: service_healthy
