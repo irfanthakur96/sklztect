@@ -52,7 +52,7 @@ services:
       - dokploy-network
 
   db_importer:
-    image: mysql:8.4
+    image: debian:bookworm-slim
     restart: "no"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
@@ -69,10 +69,10 @@ services:
       - dokploy-network
     command: >
       bash -c "
+      echo 'Installing required packages...' &&
+      apt-get update && apt-get install -y mysql-client unzip &&
       echo 'Waiting for database to be ready...' &&
       sleep 15 &&
-      echo 'Installing unzip...' &&
-      apt-get update && apt-get install -y unzip &&
       echo 'Dropping all existing tables...' &&
       mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS $$MYSQL_DATABASE; CREATE DATABASE $$MYSQL_DATABASE; SET FOREIGN_KEY_CHECKS = 1;' &&
       echo 'Extracting combined_database.zip...' &&
