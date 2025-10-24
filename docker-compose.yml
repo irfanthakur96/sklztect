@@ -51,39 +51,6 @@ services:
       - wordpress-network
       - dokploy-network
 
-  db_importer:
-    image: debian:bookworm-slim
-    restart: "no"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-wordpress}
-      MYSQL_DATABASE: ${DB_NAME:-wordpress}
-      MYSQL_USER: ${DB_USER:-wordpress}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
-    volumes:
-      - ./combined_database.zip:/tmp/combined_database.zip:ro
-    depends_on:
-      wp_db:
-        condition: service_healthy
-    networks:
-      - wordpress-network
-      - dokploy-network
-    command: >
-      bash -c "
-      echo 'Installing required packages...' &&
-      apt-get update && apt-get install -y mysql-client unzip &&
-      echo 'Waiting for database to be ready...' &&
-      sleep 15 &&
-      echo 'Dropping all existing tables...' &&
-      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS $$MYSQL_DATABASE; CREATE DATABASE $$MYSQL_DATABASE; SET FOREIGN_KEY_CHECKS = 1;' &&
-      echo 'Extracting combined_database.zip...' &&
-      cd /tmp && unzip -o combined_database.zip &&
-      echo 'Importing combined_database.sql...' &&
-      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
-      echo 'Database import completed successfully!' &&
-      echo 'Tables imported: $$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e \"SHOW TABLES;\" 2>/dev/null | wc -l)' &&
-      exit 0
-      "
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
