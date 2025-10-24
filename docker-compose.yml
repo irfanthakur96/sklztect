@@ -60,10 +60,10 @@ services:
       PMA_HOST: wp_db
       PMA_USER: ${DB_USER:-wordpress}
       PMA_PASSWORD: ${DB_PASSWORD:-wordpress}
-      UPLOAD_LIMIT: 512M
-      MEMORY_LIMIT: 512M
-      MAX_EXECUTION_TIME: 300
-      POST_MAX_SIZE: 512M
+      UPLOAD_LIMIT: 1024M
+      MEMORY_LIMIT: 1024M
+      MAX_EXECUTION_TIME: 600
+      POST_MAX_SIZE: 1024M
     depends_on:
       wp_db:
         condition: service_healthy
