@@ -1,0 +1,29 @@
+# Ignore backup folders
+Latest Backup/
+OG Project Backup/
+wp-content-backup/
+
+# Ignore backup files
+wp-config-backup.php
+combined_database.sql
+combined_database.zip
+drop_all_tables.sql
+latest_combined_database.sql
+
+# Ignore WordPress core files (we'll use Docker volumes)
+wp-admin/
+wp-includes/
+*.php
+!wp-config.php
+
+# Ignore wp-content (we'll use Docker volumes)
+wp-content/
+
+# Ignore temporary files
+tmp/
+*.tmp
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
