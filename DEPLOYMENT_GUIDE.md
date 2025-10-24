@@ -1,14 +1,22 @@
-# WordPress Deployment Guide for Dokploy
+# Complete WordPress Project Replication Guide for Dokploy
 
-## Issues Fixed
+## 🎯 **Complete Project Replication**
 
-### 1. Apache ServerName Warning
-- **Problem**: Apache couldn't determine the server's FQDN
-- **Solution**: Added ServerName configuration to docker-compose.yml
+This guide ensures 100% replication of your original sklztect.com project on Dokploy.
 
-### 2. WordPress Configuration
-- **Problem**: No wp-config.php file existed
-- **Solution**: Created proper wp-config.php with environment variable support
+### 📊 **Original Project Details:**
+- **Domain**: sklztect.com
+- **WordPress Version**: 6.8.2
+- **Custom Theme**: arolax
+- **Database**: Complete with all data (369 queries)
+- **Files**: 16,721 files including uploads, plugins, themes
+- **Security Keys**: Original keys preserved for exact replication
+
+### ✅ **What's Already Configured:**
+1. **Original Security Keys**: Restored from backup manifest
+2. **Correct Table Prefix**: wp_ (matches original)
+3. **Database Structure**: Ready for import
+4. **WordPress Files**: Complete backup available
 
 ## Environment Variables Setup
 
@@ -38,15 +46,30 @@ WORDPRESS_HOME=https://your-custom-domain.com
 WORDPRESS_SITEURL=https://your-custom-domain.com
 ```
 
-### Database Import
-
-After deployment, you need to manually import your database:
+### 🗄️ **Complete Database Import Process**
 
 1. **Access phpMyAdmin**: Go to `https://phpmyadmin.sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me`
-2. **Login**: Use your database credentials
+2. **Login**: 
+   - Username: `wordpress`
+   - Password: `wordpress` (or your Dokploy DB_PASSWORD)
 3. **Select Database**: Choose the `wordpress` database
-4. **Import**: Go to Import tab and upload your `combined_database.sql` file
-5. **Click Go**: Wait for import to complete
+4. **Import Database**: 
+   - Go to Import tab
+   - Upload your `combined_database.sql` file
+   - Click Go and wait for import to complete
+5. **Verify Import**: Check that all tables are imported (should be 25+ tables)
+
+### 📁 **WordPress Files Restoration**
+
+After database import, restore WordPress files:
+
+1. **Access your Dokploy server** via SSH or file manager
+2. **Navigate to**: `/etc/dokploy/compose/sklztect-sklztectwordpress-s6acc6/code/`
+3. **Replace wp-content folder**:
+   - Backup current wp-content: `mv wp-content wp-content-backup`
+   - Copy from backup: `cp -r "OG Project Backup/wordpress/wp-content" ./`
+4. **Set correct permissions**: `chown -R www-data:www-data wp-content`
+5. **Redeploy** the application
 
 ## Security Recommendations
 
