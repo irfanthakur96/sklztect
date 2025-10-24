@@ -88,9 +88,19 @@ define('WP_MEMORY_LIMIT', '256M');
 // Disable file editing
 define('DISALLOW_FILE_EDIT', true);
 
+// Handle reverse proxy setup
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
+// Fix for reverse proxy
+if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+
 // Set WordPress URL and Site URL (configurable via environment variables)
-define('WP_HOME', getenv('WORDPRESS_HOME') ?: 'http://localhost:8080');
-define('WP_SITEURL', getenv('WORDPRESS_SITEURL') ?: 'http://localhost:8080');
+define('WP_HOME', getenv('WORDPRESS_HOME') ?: 'https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me');
+define('WP_SITEURL', getenv('WORDPRESS_SITEURL') ?: 'https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me');
 
 /* That's all, stop editing! Happy publishing. */
 

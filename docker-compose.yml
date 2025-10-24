@@ -19,6 +19,7 @@ services:
     volumes:
       - ./wp-content:/var/www/html/wp-content
       - ./wp-config.php:/var/www/html/wp-config.php
+      - ./.htaccess:/var/www/html/.htaccess
     depends_on:
       wp_db:
         condition: service_healthy
@@ -27,9 +28,11 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wordpress.rule=Host(`${DOMAIN_NAME:-localhost}`)"
+      - "traefik.http.routers.wordpress.rule=Host(`sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me`)"
       - "traefik.http.routers.wordpress.entrypoints=web"
       - "traefik.http.services.wordpress.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.wordpress-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.wordpress.middlewares=wordpress-headers"
 
   wp_db:
     image: mysql:8.4
