@@ -76,8 +76,7 @@ services:
       if [ $$TABLE_COUNT -eq 0 ]; then
         echo 'Database is empty, importing combined_database.sql...' &&
         mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
-        echo 'Database import completed successfully!' &&
-        echo 'Tables imported: $$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e "SHOW TABLES;" 2>/dev/null | wc -l)'
+        echo 'Database import completed successfully!'
       else
         echo 'Database already has data ($$TABLE_COUNT tables), skipping import.'
       fi &&
