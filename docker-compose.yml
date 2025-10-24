@@ -71,15 +71,12 @@ services:
       bash -c "
       echo 'Waiting for database to be ready...' &&
       sleep 15 &&
-      echo 'Checking if database is empty...' &&
-      TABLE_COUNT=$$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SHOW TABLES;' 2>/dev/null | wc -l) &&
-      if [ $$TABLE_COUNT -eq 0 ]; then
-        echo 'Database is empty, importing combined_database.sql...' &&
-        mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
-        echo 'Database import completed successfully!'
-      else
-        echo 'Database already has data ($$TABLE_COUNT tables), skipping import.'
-      fi &&
+      echo 'Dropping all existing tables...' &&
+      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS $$MYSQL_DATABASE; CREATE DATABASE $$MYSQL_DATABASE; SET FOREIGN_KEY_CHECKS = 1;' &&
+      echo 'Importing combined_database.sql...' &&
+      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
+      echo 'Database import completed successfully!' &&
+      echo 'Tables imported: $$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e \"SHOW TABLES;\" 2>/dev/null | wc -l)' &&
       exit 0
       "
 
