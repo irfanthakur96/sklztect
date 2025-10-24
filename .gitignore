@@ -9,6 +9,9 @@ combined_database.sql
 combined_database.zip
 drop_all_tables.sql
 latest_combined_database.sql
+latest_combined_database_fixed.sql
+wordpress_complete_database.sql
+wordpress_table_structure.sql
 
 # Ignore WordPress core files (we'll use Docker volumes)
 wp-admin/
