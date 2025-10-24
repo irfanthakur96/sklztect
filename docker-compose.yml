@@ -59,8 +59,6 @@ services:
       MYSQL_DATABASE: ${DB_NAME:-wordpress}
       MYSQL_USER: ${DB_USER:-wordpress}
       MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
-    volumes:
-      - ./combined_database.sql:/tmp/combined_database.sql:ro
     depends_on:
       wp_db:
         condition: service_healthy
@@ -73,10 +71,10 @@ services:
       sleep 15 &&
       echo 'Dropping all existing tables...' &&
       mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS $$MYSQL_DATABASE; CREATE DATABASE $$MYSQL_DATABASE; SET FOREIGN_KEY_CHECKS = 1;' &&
-      echo 'Importing combined_database.sql...' &&
-      mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /tmp/combined_database.sql &&
-      echo 'Database import completed successfully!' &&
-      echo 'Tables imported: $$(mysql -h wp_db -u root -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE -e \"SHOW TABLES;\" 2>/dev/null | wc -l)' &&
+      echo 'Database reset completed. Please import your database manually via phpMyAdmin.' &&
+      echo 'Access phpMyAdmin at: https://phpmyadmin.${DOMAIN_NAME:-localhost}' &&
+      echo 'Login with: username=wordpress, password=wordpress' &&
+      echo 'Select the wordpress database and use the Import tab to upload combined_database.sql' &&
       exit 0
       "
 
