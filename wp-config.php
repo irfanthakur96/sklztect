@@ -99,8 +99,8 @@ if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 }
 
 // Set WordPress URL and Site URL (configurable via environment variables)
-define('WP_HOME', getenv('WORDPRESS_HOME') ?: 'https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me');
-define('WP_SITEURL', getenv('WORDPRESS_SITEURL') ?: 'https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me');
+define('WP_HOME', getenv('WORDPRESS_HOME') ?: 'https://sklztect.siliconhaveli.in');
+define('WP_SITEURL', getenv('WORDPRESS_SITEURL') ?: 'https://sklztect.siliconhaveli.in');
 
 /* That's all, stop editing! Happy publishing. */
 
