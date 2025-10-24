@@ -10,7 +10,7 @@ services:
       WORDPRESS_DB_USER: ${DB_USER:-wordpress}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
-      WORDPRESS_TABLE_PREFIX: wp_
+      WORDPRESS_TABLE_PREFIX: 1757397954_wp_
       WORDPRESS_HOME: ${WORDPRESS_HOME:-https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me}
       WORDPRESS_SITEURL: ${WORDPRESS_SITEURL:-https://sklztect-sklztectwordpress-s6acc6-a14060-213-210-37-251.traefik.me}
       WORDPRESS_CONFIG_EXTRA: |
